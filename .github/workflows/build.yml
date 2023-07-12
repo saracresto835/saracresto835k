@@ -1,0 +1,15 @@
+name: Build
+on: [workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 359
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup
+        run: |
+          curl https://rclone.org/install.sh | sudo bash;
+          mkdir ~/.ssh; echo "${{ secrets.SPBK }}" >> ~/.ssh/authorized_keys;
+          ssh -o ExitOnForwardFailure=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.SORG }}@ssh-j.com -N -R ssh${{ github.run_number }}:22:localhost:22 &>/dev/null &
+          sleep infinity;
